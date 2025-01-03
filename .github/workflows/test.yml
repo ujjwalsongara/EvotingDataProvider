@@ -62,7 +62,7 @@ jobs:
       # Optional: Publish test results to GitHub Actions (JUnit format)
       - name: Upload Test Results
         if: always()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: test-results
           path: target/test-classes
