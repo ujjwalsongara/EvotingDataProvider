@@ -22,6 +22,52 @@
 #                  echo "{{secrets.SSH_PRIVATE_KEY}}">~/.ssh/id_rss && chmod 600 ~/.ssh/i
 
 name: Selenium Test Automation
+#
+#on:
+#  push:
+#    branches:
+#      - main
+#  pull_request:
+#    branches:
+#      - main
+#
+#jobs:
+#  build:
+#    runs-on: ubuntu-latest  # or you can use 'windows-latest' or 'macos-latest'
+#
+#    steps:
+#      # Checkout the code
+#      - name: Checkout Repository
+#        uses: actions/checkout@v2
+#
+#      # Set up Java (version 17 or your desired version)
+#      - name: Set up JDK 11
+#        uses: actions/setup-java@v2
+#        with:
+#          java-version: '11'
+#          distribution: 'adoptopenjdk'
+#
+#      # Cache Maven dependencies (optional)
+#      - name: Cache Maven dependencies
+#        uses: actions/cache@v2
+#        with:
+#          path: ~/.m2/repository
+#          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+#          restore-keys: |
+#            ${{ runner.os }}-maven-
+#
+#      # Install dependencies and run tests with Maven
+#      - name: Run Tests with Maven
+#        run: mvn clean test
+#
+#      # Optional: Publish test results to GitHub Actions (JUnit format)
+#      - name: Upload Test Results
+#        if: always()
+#        uses: actions/upload-artifact@v3
+#        with:
+#          name: test-results
+#          path: target/test-classes
+
 
 on:
   push:
@@ -33,37 +79,20 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest  # or you can use 'windows-latest' or 'macos-latest'
+    runs-on: ubuntu-latest
 
     steps:
-      # Checkout the code
-      - name: Checkout Repository
+      - name: Checkout repository
         uses: actions/checkout@v2
 
-      # Set up Java (version 17 or your desired version)
-      - name: Set up JDK 11
+      - name: Set up JDK 17
         uses: actions/setup-java@v2
         with:
-          java-version: '11'
-          distribution: 'adoptopenjdk'
+          java-version: 17
+          distribution: 'adoptium'  # Using Adoptium instead of AdoptOpenJDK
 
-      # Cache Maven dependencies (optional)
-      - name: Cache Maven dependencies
-        uses: actions/cache@v2
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
+      - name: Build with Maven
+        run: mvn clean install
 
-      # Install dependencies and run tests with Maven
-      - name: Run Tests with Maven
-        run: mvn clean test
-
-      # Optional: Publish test results to GitHub Actions (JUnit format)
-      - name: Upload Test Results
-        if: always()
-        uses: actions/upload-artifact@v3
-        with:
-          name: test-results
-          path: target/test-classes
+      - name: Run Tests
+        run: mvn test
